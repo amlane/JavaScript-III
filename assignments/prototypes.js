@@ -40,11 +40,12 @@ function CharacterStats(obj){
   this.healthPoints = obj.healthPoints;
 }
 
+CharacterStats.prototype = Object.create(GameObject.prototype);
+
 CharacterStats.prototype.takeDamage = function(){
-  return `${mage.name} take damage.`
+  return `${this.name} take damage.`
 }
 
-CharacterStats.prototype = Object.create(GameObject.prototype);
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -64,13 +65,12 @@ function Humanoid(obj){
   this.language = obj.language;
 };
  
-Humanoid.prototype.greet = function() {
-  return `${this.name} offers a greeting in ${this.language}.`
-};
-
 Humanoid.prototype = Object.create(GameObject.prototype);
 Humanoid.prototype = Object.create(CharacterStats.prototype);
 
+Humanoid.prototype.greet = function() {
+  return `${this.name} offers a greeting in ${this.language}.`
+};
 
 
 /*
