@@ -16,14 +16,14 @@
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 
-function GameObject(mage){
-  this.createdAt = mage.createdAt;
-  this.name = mage.name;
-  this.dimensions = mage.dimensions;
+function GameObject(obj){
+  this.createdAt = obj.createdAt;
+  this.name = obj.name;
+  this.dimensions = obj.dimensions;
 }
 
 GameObject.prototype.destroy = function() {
-  return `${this.name} was removed from the game.`
+  return `${this.name} was removed from the game.`;
 };
 
 
@@ -35,8 +35,9 @@ GameObject.prototype.destroy = function() {
   * should inherit destroy() from GameObject's prototype
 */
 
-function CharacterStats(mage){
-  this.healthPoints = mage.healthPoints;
+function CharacterStats(obj){
+  GameObject.call(this, obj);
+  this.healthPoints = obj.healthPoints;
 }
 
 CharacterStats.prototype.takeDamage = function(){
@@ -55,13 +56,15 @@ CharacterStats.prototype = Object.create(GameObject.prototype);
   * should inherit takeDamage() from CharacterStats
 */
 
-function Humanoid(mage){
-  this.team = mage.team;
-  this.weapons = mage.weapons;
-  this.language = mage.language;
+function Humanoid(obj){
+  GameObject.call(this, obj);
+  CharacterStats.call(this, obj);
+  this.team = obj.team;
+  this.weapons = obj.weapons;
+  this.language = obj.language;
 };
  
-Humanoid.prototype.greet = function(){
+Humanoid.prototype.greet = function() {
   return `${this.name} offers a greeting in ${this.language}.`
 };
 
