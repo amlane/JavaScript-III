@@ -16,12 +16,36 @@
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 
+function GameObject(obj){
+  this.createdAt = obj.createdAt;
+  this.name = obj.name;
+  this.dimensions = obj.dimensions;
+}
+
+GameObject.prototype.destroy = function() {
+  return `${this.name} was removed from the game.`;
+};
+
+
+
 /*
   === CharacterStats ===
   * healthPoints
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
+
+function CharacterStats(obj){
+  GameObject.call(this, obj);
+  this.healthPoints = obj.healthPoints;
+}
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
+
+CharacterStats.prototype.takeDamage = function(){
+  return `${this.name} takes damage.`
+}
+
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -32,16 +56,59 @@
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
+
+function Humanoid(obj){
+  CharacterStats.call(this, obj);
+  this.team = obj.team;
+  this.weapons = obj.weapons;
+  this.language = obj.language;
+};
  
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+
+Humanoid.prototype.greet = function() {
+  return `${this.name} offers a greeting in ${this.language}.`
+};
+
+
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
   * Instances of CharacterStats should have all of the same properties as GameObject.
 */
 
+// stretch constructors
+
+function Villian(obj){
+  Humanoid.call(this, obj);
+  this.spell = obj.spell;
+};
+
+Villian.prototype = Object.create(Humanoid.prototype);
+
+Villian.prototype.attack = function (human) {
+  human.healthPoints -= 5;
+  if (human.healthPoints > 0) {
+    return `${this.name} attacks ${human.name} with ${this.spell}! \n ${human.takeDamage()} \n Health points: ${human.healthPoints}`;
+  } else if (human.healthPoints <= 0) {
+           return `${human.destroy()}`;
+         }
+};
+
+function Hero(obj){
+  Humanoid.call(this, obj);
+  this.spell = obj.spell;
+};
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+Hero.prototype.protect = function (human) {
+  return `${this.name} protects with ${this.spell} and saves ${human.name}!`;
+};
+
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -92,6 +159,40 @@
     language: 'Elvish',
   });
 
+  const witch = new Villian({
+    createdAt: new Date(),
+    dimensions: {
+      length: 7,
+      width: 2,
+      height: 8,
+    },
+    healthPoints: 20,
+    name: 'Malificent',
+    team: 'Slytherin',
+    weapons: [
+      'Knife',
+      'Sarcasm',
+    ],
+    language: 'Demon',
+    spell: 'Storm Curse'
+  });
+  
+  const angel = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+      length: 5,
+      width: 3,
+      height: 5
+    },
+    healthPoints: 25,
+    name: "Radha",
+    team: "A-Team",
+    weapons: ["Armor",
+             "Clever"],
+    language: "French",
+    spell: "white light"
+  });
+
   console.log(mage.createdAt); // Today's date
   console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
   console.log(swordsman.healthPoints); // 15
@@ -102,9 +203,12 @@
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+  console.log(witch.attack(archer));// villian uses spell to attack
+  console.log(angel.protect(archer)); //hero protects Humanoid from villian hit
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+ 
