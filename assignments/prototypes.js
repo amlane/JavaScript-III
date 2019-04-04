@@ -86,8 +86,13 @@ function Villian(obj){
 
 Villian.prototype = Object.create(Humanoid.prototype);
 
-Villian.prototype.attack = function(human) {
-  return `${this.name} attacks ${human.name} with ${this.spell}! ${human.name} has ${[human.healthPoints -= 5]} health points.`;
+Villian.prototype.attack = function (human) {
+  human.healthPoints -= 5;
+  if (human.healthPoints > 0) {
+    return `${this.name} attacks ${human.name} with ${this.spell}! \n ${human.takeDamage()} \n Health points: ${human.healthPoints}`;
+  } else if (human.healthPoints <= 0) {
+           return `${human.destroy()}`;
+         }
 };
 
 function Hero(obj){
@@ -198,9 +203,8 @@ Hero.prototype.protect = function (human) {
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-  console.log(witch.attack(mage), mage.destroy()); 
-  console.log(witch.attack(mage), mage.destroy());// villian uses spell to attack
-  console.log(angel.protect(mage)); //hero protects Humanoid from villian hit
+  console.log(witch.attack(archer));// villian uses spell to attack
+  console.log(angel.protect(archer)); //hero protects Humanoid from villian hit
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
